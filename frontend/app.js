@@ -1,4 +1,4 @@
-const gun = Gun(['https://dcomm.dev.trustgrid.com/gun']);
+const gun = Gun(['http://localhost:3005/gun']);
 const IPFS_BACKEND_URL = 'https://ipfs-backend.uat.trustgrid.com';
 
 // User state
@@ -201,8 +201,8 @@ function getChatId(user1, user2) {
 }
 
 // Event Listeners
-// registerBtn.addEventListener('click', register);
-// loginBtn.addEventListener('click', login);
+registerBtn.addEventListener('click', register);
+loginBtn.addEventListener('click', login);
 sendMessageBtn.addEventListener('click', sendMessage);
 addContactBtn.addEventListener('click', addContact);
 
@@ -1426,22 +1426,22 @@ function clearChat() {
   currentChatType = null;
 }
 
-(async function () {
-  const urlString = window.location.href;
-  const url = new URL(urlString);
-  const username = url.searchParams.get('username');
-  let password = url.searchParams.get('password');
-  password += "Trus@"+password;
-  if (username && password) {
-    try {
-      await login(null, username.trim(), password.trim());
-    } catch (err) {
-      console.log(err);
-      await register(null, username.trim(), password.trim());
-      await login(null, username.trim(), password.trim());
-    } 
-  }
-})();
+// (async function () {
+//   const urlString = window.location.href;
+//   const url = new URL(urlString);
+//   const username = url.searchParams.get('username');
+//   let password = url.searchParams.get('password');
+//   password += "Trus@"+password;
+//   if (username && password) {
+//     try {
+//       await login(null, username.trim(), password.trim());
+//     } catch (err) {
+//       console.log(err);
+//       await register(null, username.trim(), password.trim());
+//       await login(null, username.trim(), password.trim());
+//     } 
+//   }
+// })();
 
 
 
