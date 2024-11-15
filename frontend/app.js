@@ -1,4 +1,4 @@
-const gun = Gun(['https://10.10.14.144:8443/gun']);
+const gun = Gun(['https://198b-2409-40f2-21-a992-faf0-5ff-fe5b-f618.ngrok-free.app//gun']);
 const IPFS_BACKEND_URL = 'https://ipfs-backend.uat.trustgrid.com';
 
 // User state
