@@ -159,25 +159,6 @@ async function startVoiceCall() {
   }
 }
 
-function handleIncomingIceCandidate(callId, data) {
-  if (data && data.ice) {
-      try {
-          const candidate = JSON.parse(data.ice);
-          if (!iceCandidates[callId]) {
-              iceCandidates[callId] = [];
-          }
-          iceCandidates[callId].push(candidate);
-          console.log('Buffered ICE candidate for call:', callId);
-
-          if (peerConnection && peerConnection.remoteDescription) {
-              addBufferedCandidates(callId);
-          }
-      } catch (error) {
-          console.error('Error parsing ICE candidate:', error);
-      }
-  }
-}
-
 // Modify the handleIncomingCall function
 async function handleIncomingCall(data) {
   console.log('Handling incoming call:', data);
@@ -364,42 +345,6 @@ window.addEventListener('load', initializeWebRTC);
 // Listen for incoming calls and ICE candidates
 gun.on('auth', () => {
   console.log('User authenticated:', user.is.alias);
-  gun.get(`calls`).map().on(async (data, key) => {
-      if (!data || !data.to || data.to !== user.is.alias) return;
-      
-      console.log('Received call data:', data);
-      
-      // Ignore old call data
-      if (data.startTime && Date.now() - data.startTime > 60000) return;
-      
-      if (data.type === 'ice') {
-          handleIncomingIceCandidate(key, data);
-          
-          // Check if we can reconstruct the offer from the ICE candidate
-          if (!pendingOffer && data.offerSdp) {
-              pendingOffer = {
-                  type: 'offer',
-                  sdp: data.offerSdp
-              };
-              console.log('Reconstructed offer from ICE candidate, attempting to show incoming call popup');
-              handleIncomingCall({...data, callId: key, offerType: 'offer'});
-          }
-      } else if (data.type === 'answer' && peerConnection) {
-          try {
-              await peerConnection.setRemoteDescription(new RTCSessionDescription({
-                  type: data.answerType,
-                  sdp: data.answerSdp
-              }));
-              addBufferedCandidates(key);
-          } catch (error) {
-              console.error('Error setting remote description:', error);
-          }
-      } else if (data.type === 'end') {
-          endVoiceCall();
-      } else {
-          console.log('Unhandled call data type:', data.type);
-      }
-  });
 });
 
 function addDetailedLogging(peerConnection) {
